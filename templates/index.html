@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>ML EfficientNet-Lite4</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<h1>ML EfficientNet-Lite4</h1>
+<p>ONNX Model Demo by husercar <br><br>Bitte Bild hochladen (jpeg, png)</p>
+<div class="input-group">
+    <input type="file" class="form-control" id="inputGroupFile04" aria-describedby="inputGroupFileAddon04" aria-label="Upload">
+    <button class="btn btn-outline-secondary" type="button" id="inputGroupFileAddon04" onclick="submitmodel()">Submit</button>
+</div>
+
+<div id="answerPart" style="visibility: hidden;">
+    <h3>Answer:</h3>
+    <p id="result"></p>
+    <h3>Analyzed Image:</h3>
+    <img id="analyzedImage" style="max-width: 500px;">
+
+</div>
+
+</body>
+<script>
+    function submitmodel(){
+        // Get the input file element
+        var input = document.getElementById('inputGroupFile04');
+        var file = input.files[0];
+
+        // Create a FormData object to send the file
+        var formData = new FormData();
+        formData.append('file', file);
+
+        // Send the file to the Flask backend using a POST request
+        fetch('/submit', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.text())
+        .then(data => {
+          console.log(data)
+            // Display the processed output
+            var resultDiv = document.getElementById('result');
+            resultDiv.innerHTML = 'Processed output: ' + data;
+            var analyzedImage = document.getElementById('analyzedImage');
+            analyzedImage.src = URL.createObjectURL(file);
+            var answerPartDiv = document.getElementById('answerPart');
+            answerPartDiv.style.visibility = 'visible';
+        })
+        .catch(error => console.error(error));
+    }
+        </script>
+</html>
